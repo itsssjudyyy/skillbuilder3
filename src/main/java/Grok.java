@@ -14,12 +14,12 @@ public class Grok
     // instance variables
     private int powerLevel;
     private boolean isAlive;
-
     /*
      * Initializes a Grok object to the default power level of 50.
      */
     public Grok()
     {
+        isAlive = true;
         setPowerLevel(DEFAULT_POWER_LEVEL);
     }
 
@@ -30,6 +30,7 @@ public class Grok
      */
     public Grok(int powerLevel)
     {
+        isAlive = true;
         setPowerLevel(powerLevel);
     }
 
@@ -46,18 +47,26 @@ public class Grok
 
     public boolean isDead()
     {
-        // TODO: replace this line with your code here
+        isAlive = powerLevel > 0;
+        return !isAlive;
     }
-
     // mutator methods
-
     /*
      * Sets the power level of this Grok.
      * @param powerLevel the power value to set for this Grok.
      */
     public void setPowerLevel(int powerLevel)
     {
-        this.powerLevel = powerLevel;
+        if (isAlive && powerLevel > 0) {
+            if (powerLevel > MAX_POWER_LEVEL) {
+                this.powerLevel = MAX_POWER_LEVEL;
+            } else {
+                this.powerLevel = powerLevel;
+            }
+        } else {
+            this.powerLevel = 0;
+            isAlive = false;
+        }
     }
 
     /*
@@ -68,16 +77,27 @@ public class Grok
      */
     public void takePowerPill(PowerPill pill)
     {
-        setPowerLevel(powerLevel + pill.getPower());
+        if(powerLevel > 0) {
+            if (powerLevel + pill.getPower() <= 100) {
+                setPowerLevel(powerLevel + pill.getPower());
+            } else {
+                setPowerLevel(100);
+            }
+        }
+
     }
 
     /*
      * Invoked when this Grok takes a hit.  The power level of
      * this Grok is reduced by 5.
      */
-    public void tookHit()
-    {
-        setPowerLevel(powerLevel - 5);
+    public void tookHit() {
+        if (powerLevel - 5 >= 0) {
+            setPowerLevel(powerLevel - 5);
+        } else {
+            setPowerLevel(0);
+            isAlive = false;
+        }
     }
 
     //================== Do Not Touch Code Below this line =============================
